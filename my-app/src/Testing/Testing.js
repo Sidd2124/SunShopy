@@ -31,6 +31,7 @@ const Testing = () => {
           <li key={item._id}>{item.name}: {item.value}</li>
         ))}
       </ul>
+      <p>Sidd</p>
     </div>
   );
 };
