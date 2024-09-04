@@ -1,37 +1,33 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect ,useState} from 'react';
 
 const Testing = () => {
-  const [data, setData] = useState([]);
-  const [error, setError] = useState(null);
-
+  const [list,setList]=useState("")
+  
   useEffect(() => {
     GetData();
   }, []);
 
   const GetData = async () => {
     try {
-      const URL = 'http://localhost:5000/api/data'; 
+      const URL = 'http://localhost:3000/Test'; 
 
       const response = await axios.get(URL);
-      console.log(response); 
-      setData(response.data); 
+      console.log(response.data[0].
+        Location)
+      setList(response.data[0])
+     
     } catch (error) {
       console.error('Error fetching data:', error);
-      setError('Failed to fetch data. Please try again later.'); 
+
     }
   };
 
   return (
     <div>
       <h1>Hello World</h1>
-      {error && <p>{error}</p>}
-      <ul>
-        {data.map(item => (
-          <li key={item._id}>{item.name}: {item.value}</li>
-        ))}
-      </ul>
-      <p>Sidd</p>
+<p>{list.Name}</p>
+      <p>{list.Location}</p>
     </div>
   );
 };

@@ -1,25 +1,44 @@
 const express = require('express');
-const cors = require('cors');
+const mongoose = require('mongoose');
+const cors = require('cors'); 
+const http = require('http');
 
 const app = express();
-app.use(cors());
+
+
 app.use(express.json());
+app.use(cors());
 
-// Static data instead of MongoDB
-const staticData = [
-  { _id: '1', name: 'Item 1', value: 10 },
-  { _id: '2', name: 'Item 2', value: 20 },
-  { _id: '3', name: 'Item 3', value: 30 }
-];
 
-app.get('/api/data', (req, res) => {
+mongoose.connect('mongodb+srv://tsiddu805:gzYdNLA1kGYdE7uR@cluster1.vvwfp.mongodb.net/sample_supplies')
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.error('MongoDB connection error:', err));
+
+
+const TestSchema = new mongoose.Schema({
+  Name: String,
+  
+Location:String 
+});
+
+
+const Test = mongoose.model('Test', TestSchema, 'Test');
+
+
+app.get('/Test', async (req, res) => {
   try {
-    res.json(staticData);
-  } catch (err) {
-    console.error('Error fetching data:', err);
-    res.status(500).json({ error: err.message });
+    const tests = await Test.find(); // Retrieve all documents
+    console.log(tests); // Log fetched data for debugging
+    res.status(200).json(tests);
+  } catch (error) {
+    res.status(400).json({ error: 'Failed to fetch tests', details: error.message });
   }
 });
 
-const PORT = process.env.PORT || 5000; // Changed to port 5000 to avoid conflicts
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Server setup
+const server = http.createServer(app);
+const PORT = process.env.PORT || 3000;
+
+server.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
